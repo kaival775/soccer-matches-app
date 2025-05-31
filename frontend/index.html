@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="matches"></div>
+</body>
+<script>
+    async function fetchMatches() {
+        try {
+            const response = await fetch('http://localhost:3000/api/upcoming-matches');
+            const data = await response.json();
+
+            const matchesDiv = document.querySelector('.matches');
+            matchesDiv.innerHTML = '';
+            if (data.events && data.events.length > 0) {
+                data.events.forEach(event => {
+                    const matchElement = document.createElement('div');
+                    matchElement.innerHTML = `
+                        <strong>${event.strEvent}</strong>
+                        <div>Date: ${event.dateEvent}</div>
+                        <div>Time: ${event.strTime}</div>
+                    `;
+                    matchesDiv.appendChild(matchElement);
+                });
+            } else {
+                matchesDiv.innerHTML = '<p>No upcoming matches found.</p>';
+            }   
+
+        } catch (error) {
+            console.error('There has been a problem with your fetch operation:', error);
+        }
+    }
+    fetchMatches();
+</script>
+</html>
